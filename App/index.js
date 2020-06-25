@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ColorPalette from './screens/ColorPalette';
 
@@ -14,7 +14,11 @@ export default function App() {
         screenOptions={{ cardStyle: { backgroundColor: 'white' } }}
         initialRouteName="Home">
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="ColorPalette" component={ColorPalette} />
+        <Stack.Screen
+          options={({ route }) => ({ headerTitle: route.params.paletteName })}
+          name="ColorPalette"
+          component={ColorPalette}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
