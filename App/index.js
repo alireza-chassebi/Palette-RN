@@ -1,25 +1,47 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createStackNavigator, HeaderTitle } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ColorPalette from './screens/ColorPalette';
+import AddNewPaletteModal from './components/AddNewPalletteModal';
+import PalettePreview from './components/PalettePreview';
 
-const Stack = createStackNavigator();
+const MainStack = createStackNavigator();
+const RootStack = createStackNavigator();
+
+const MainStackScreen = () => {
+  return (
+    <MainStack.Navigator
+      screenOptions={{ cardStyle: { backgroundColor: 'white' } }}
+      initialRouteName="Home">
+      <MainStack.Screen name="Home" component={Home} />
+      <MainStack.Screen
+        options={({ route }) => ({ headerTitle: route.params.paletteName })}
+        name="ColorPalette"
+        component={ColorPalette}
+      />
+    </MainStack.Navigator>
+  );
+};
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
+      <RootStack.Navigator
         screenOptions={{ cardStyle: { backgroundColor: 'white' } }}
-        initialRouteName="Home">
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen
-          options={({ route }) => ({ headerTitle: route.params.paletteName })}
-          name="ColorPalette"
-          component={ColorPalette}
+        mode="modal">
+        <RootStack.Screen
+          name="Main"
+          component={MainStackScreen}
+          options={{ headerShown: false }}
         />
-      </Stack.Navigator>
+        <RootStack.Screen
+          options={{ title: null, headerBackTitle: 'Home' }}
+          name="AddNewPalette"
+          component={AddNewPaletteModal}
+        />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }

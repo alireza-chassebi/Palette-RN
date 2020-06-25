@@ -1,13 +1,39 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, Button, FlatList } from 'react-native';
+import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Container from '../components/Container';
 import PalettePreview from '../components/PalettePreview';
 import AsyncStorage from '@react-native-community/async-storage';
-import COLOR_PALETTES from '../data/data';
 
-const Home = ({ navigation: { navigate } }) => {
+const styles = {
+  ListHeader: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: 'teal',
+    marginBottom: 20,
+  },
+};
+
+const Home = ({ navigation: { navigate }, route }) => {
   const [palettes, setPalettes] = useState([]);
   const [error, setError] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const newColorPalette = route.params
+    ? route.params.newColorPalette
+    : undefined;
+
+  useEffect(() => {
+    if (newColorPalette) {
+      setPalettes((prev) => [...prev, newColorPalette]);
+    }
+  }, [newColorPalette]);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await handleFetchPalettes();
+    //make sure user knows something happened
+    setTimeout(() => setIsRefreshing(false), 600);
+  }, []);
 
   const handleFetchPalettes = useCallback(async () => {
     try {
@@ -28,6 +54,11 @@ const Home = ({ navigation: { navigate } }) => {
         <Text>Error loading palettes</Text>
       ) : (
         <FlatList
+          ListHeaderComponent={
+            <TouchableOpacity onPress={() => navigate('AddNewPalette')}>
+              <Text style={styles.ListHeader}>launch modal</Text>
+            </TouchableOpacity>
+          }
           data={palettes}
           keyExtractor={(item, index) => String(index)}
           renderItem={({ item: { paletteName, colors } }) => (
@@ -40,14 +71,12 @@ const Home = ({ navigation: { navigate } }) => {
             />
           )}
           showsVerticalScrollIndicator={false}
+          refreshing={isRefreshing}
+          onRefresh={handleRefresh}
         />
       )}
     </Container>
   );
-};
-
-Home.defaultProps = {
-  colorPalettes: COLOR_PALETTES,
 };
 
 export default Home;
