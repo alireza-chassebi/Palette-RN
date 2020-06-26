@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PalettePreview = ({ title, handlePress, colors, handleDelete }) => {
+const PalettePreview = ({ title, handlePress, colors, handleDelete, id }) => {
   return (
     <>
       {/* {console.log('rerenders')} */}
