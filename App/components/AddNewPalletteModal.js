@@ -1,12 +1,16 @@
-import React, { useState, useCallback, FlatList } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
   Alert,
+  FlatList,
+  View,
+  Switch,
 } from 'react-native';
 import Container from './Container';
+import { COLORS } from '../data/data';
 
 const styles = StyleSheet.create({
   Input: {
@@ -14,6 +18,7 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     padding: 10,
     borderRadius: 5,
+    marginBottom: 40,
   },
   Title: {
     marginBottom: 5,
@@ -29,17 +34,51 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: '700',
   },
+  ColorContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  Seperator: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+  },
 });
+
+const initalValue = Array.from(Array(COLORS.length), () => false);
 
 const AddNewPaletteModal = ({ navigation: { navigate } }) => {
   const [name, setName] = useState('');
+  const [selectedColors, setSelectedColors] = useState([]);
+
+  const handleUpdate = useCallback(
+    (color, newValue) => {
+      if (newValue) {
+        setSelectedColors((current) => {
+          return [...current, color];
+        });
+      } else {
+        setSelectedColors((current) => {
+          return current.filter((c) => c.colorName !== color.colorName);
+        });
+      }
+    },
+    [setSelectedColors]
+  );
+
   const handleSubmit = useCallback(() => {
-    if (!name) Alert.alert('Please enter a palette name!');
-    else {
-      const newColorPalette = { paletteName: name, colors: [] };
-      navigate('Home', { newColorPalette });
+    if (!name) {
+      Alert.alert('Please add a name to your color palette');
+    } else if (selectedColors.length < 3) {
+      Alert.alert('Please choose at least 3 colors');
+    } else {
+      const newColorPalette = { paletteName: name, colors: selectedColors };
+      console.log(newColorPalette);
+      navigate('Home', {
+        newColorPalette,
+      });
     }
-  }, [name]);
+  }, [name, selectedColors]);
   return (
     <Container>
       <Text style={styles.Title}>Name of the palette</Text>
@@ -49,7 +88,25 @@ const AddNewPaletteModal = ({ navigation: { navigate } }) => {
         onChangeText={(text) => setName(text)}
         placeholder="Palette name"
       />
-
+      <FlatList
+        data={COLORS}
+        keyExtractor={(item, index) => String(index)}
+        renderItem={({ item, index }) => (
+          <View style={styles.ColorContainer}>
+            <Text>{item.colorName}</Text>
+            <Switch
+              value={
+                !!selectedColors.find(
+                  (color) => color.colorName === item.colorName
+                )
+              }
+              onValueChange={(newValue) => handleUpdate(item, newValue)}
+            />
+          </View>
+        )}
+        ItemSeparatorComponent={() => <View style={styles.Seperator} />}
+        showsVerticalScrollIndicator={false}
+      />
       <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
         <Text style={styles.ButtonText}>Submit</Text>
       </TouchableOpacity>

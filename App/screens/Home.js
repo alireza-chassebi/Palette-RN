@@ -3,6 +3,7 @@ import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import Container from '../components/Container';
 import PalettePreview from '../components/PalettePreview';
 import AsyncStorage from '@react-native-community/async-storage';
+import { COLOR_PALETTES } from '../data/data';
 
 const styles = {
   ListHeader: {
@@ -13,9 +14,44 @@ const styles = {
   },
 };
 
-const Home = ({ navigation: { navigate }, route }) => {
-  const [palettes, setPalettes] = useState([]);
+const useStorage = () => {
+  const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const getStorage = async () => {
+      let data;
+      try {
+        const response = await AsyncStorage.getItem('palette');
+        if (response !== null) {
+          setResponse(JSON.parse(response));
+        } else {
+          setResponse(COLOR_PALETTES);
+        }
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getStorage();
+  }, []);
+
+  useEffect(() => {
+    const setStorage = async () => {
+      await AsyncStorage.setItem('palette', JSON.stringify(response));
+    };
+    if (response !== null) {
+      setStorage();
+    }
+  }, [response]);
+
+  return [response, setResponse, error, setError, loading];
+};
+
+const Home = ({ navigation: { navigate }, route }) => {
+  const [palettes, setPalettes, error, setError, loading] = useStorage();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const newColorPalette = route.params
@@ -28,35 +64,32 @@ const Home = ({ navigation: { navigate }, route }) => {
     }
   }, [newColorPalette]);
 
-  const handleRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    await handleFetchPalettes();
-    //make sure user knows something happened
-    setTimeout(() => setIsRefreshing(false), 600);
+  const handleFetchPalettes = useCallback(async () => {
+    const response = await AsyncStorage.getItem('palette');
+    if (response !== null) {
+      setPalettes(JSON.parse(response));
+    }
   }, []);
 
-  const handleFetchPalettes = useCallback(async () => {
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
     try {
-      const response = await AsyncStorage.getItem('palettes');
-      setPalettes(JSON.parse(response));
-    } catch (error) {
+      await handleFetchPalettes();
+      setTimeout(() => setIsRefreshing(false), 600);
+    } catch {
       setError(true);
     }
   }, []);
 
-  useEffect(() => {
-    handleFetchPalettes();
-  }, []);
-
   return (
     <Container>
-      {error ? (
-        <Text>Error loading palettes</Text>
+      {loading ? (
+        <Text>Loading Palettes</Text>
       ) : (
         <FlatList
           ListHeaderComponent={
             <TouchableOpacity onPress={() => navigate('AddNewPalette')}>
-              <Text style={styles.ListHeader}>launch modal</Text>
+              <Text style={styles.ListHeader}>Create New Palette </Text>
             </TouchableOpacity>
           }
           data={palettes}
@@ -68,6 +101,7 @@ const Home = ({ navigation: { navigate }, route }) => {
               handlePress={() =>
                 navigate('ColorPalette', { paletteName, colors })
               }
+              handleDelete={() => alert('hi')}
             />
           )}
           showsVerticalScrollIndicator={false}
@@ -75,6 +109,7 @@ const Home = ({ navigation: { navigate }, route }) => {
           onRefresh={handleRefresh}
         />
       )}
+      {error && <Text>error loading palettes</Text>}
     </Container>
   );
 };
