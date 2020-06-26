@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 const PalettePreview = ({ title, handlePress, colors, handleDelete }) => {
   return (
     <>
-      {console.log('rerenders')}
+      {/* {console.log('rerenders')} */}
       <TouchableOpacity onPress={handlePress}>
         <Text style={styles.Title}>{title}</Text>
         <View style={styles.Container}>

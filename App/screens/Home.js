@@ -65,6 +65,7 @@ const Home = ({ navigation: { navigate }, route }) => {
   }, [newColorPalette]);
 
   const handleFetchPalettes = useCallback(async () => {
+    // await AsyncStorage.clear();
     const response = await AsyncStorage.getItem('palette');
     if (response !== null) {
       setPalettes(JSON.parse(response));
@@ -75,10 +76,15 @@ const Home = ({ navigation: { navigate }, route }) => {
     setIsRefreshing(true);
     try {
       await handleFetchPalettes();
-      setTimeout(() => setIsRefreshing(false), 600);
     } catch {
       setError(true);
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 600);
     }
+  }, []);
+
+  const handleDelete = useCallback((id) => {
+    setPalettes((prev) => prev.filter((palette) => palette.id !== id));
   }, []);
 
   return (
@@ -94,14 +100,14 @@ const Home = ({ navigation: { navigate }, route }) => {
           }
           data={palettes}
           keyExtractor={(item, index) => String(index)}
-          renderItem={({ item: { paletteName, colors } }) => (
+          renderItem={({ item: { paletteName, colors, id } }) => (
             <PalettePreview
               title={paletteName}
               colors={colors.slice(0, 5)}
               handlePress={() =>
                 navigate('ColorPalette', { paletteName, colors })
               }
-              handleDelete={() => alert('hi')}
+              handleDelete={() => handleDelete(id)}
             />
           )}
           showsVerticalScrollIndicator={false}

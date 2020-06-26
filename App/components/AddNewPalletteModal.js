@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import Container from './Container';
 import { COLORS } from '../data/data';
+//had to use @3.4.0 since v7 does not work in RN
+import uuid from 'uuid/v1';
 
 const styles = StyleSheet.create({
   Input: {
@@ -72,8 +74,11 @@ const AddNewPaletteModal = ({ navigation: { navigate } }) => {
     } else if (selectedColors.length < 3) {
       Alert.alert('Please choose at least 3 colors');
     } else {
-      const newColorPalette = { paletteName: name, colors: selectedColors };
-      console.log(newColorPalette);
+      const newColorPalette = {
+        id: uuid(),
+        paletteName: name,
+        colors: selectedColors,
+      };
       navigate('Home', {
         newColorPalette,
       });
