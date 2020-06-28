@@ -1,14 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
-
-const styles = StyleSheet.create({
-  Box: {
-    marginVertical: 10,
-    padding: 10,
-    textAlign: 'center',
-    fontWeight: '700',
-  },
-});
+import { Text } from 'react-native';
+import styles from './styles';
 
 const ColorBox = ({ colorName, hexCode }) => {
   const textColor =

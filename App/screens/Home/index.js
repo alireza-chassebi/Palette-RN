@@ -1,18 +1,10 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import Container from '../components/Container';
-import PalettePreview from '../components/PalettePreview';
+import { Text, FlatList, TouchableOpacity } from 'react-native';
+import Container from '../../components/Container';
+import PalettePreview from '../../components/PalettePreview';
 import AsyncStorage from '@react-native-community/async-storage';
-import { COLOR_PALETTES } from '../data/data';
-
-const styles = StyleSheet.create({
-  ListHeader: {
-    fontSize: 30,
-    fontWeight: '700',
-    color: 'teal',
-    marginBottom: 20,
-  },
-});
+import { COLOR_PALETTES } from '../../data/data';
+import styles from './styles';
 
 const useStorage = () => {
   const [response, setResponse] = useState(null);

@@ -1,32 +1,7 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-
-const styles = StyleSheet.create({
-  Title: {
-    fontSize: 20,
-    fontWeight: '700',
-    marginBottom: 10,
-  },
-  Container: { flex: 1, flexDirection: 'row' },
-  BoxContainer: {
-    flexDirection: 'row',
-    marginBottom: 30,
-    alignItems: 'center',
-  },
-  Box: {
-    width: 50,
-    height: 50,
-    marginRight: 10,
-  },
-  IconContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    marginBottom: 30,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-});
+import styles from './styles';
 
 const PalettePreview = ({ title, handlePress, colors, handleDelete, id }) => {
   return (

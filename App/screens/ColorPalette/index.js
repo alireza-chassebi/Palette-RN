@@ -1,16 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import Container from '../components/Container';
-import ColorBox from '../components/ColorBox';
-import { ScrollView, FlatList } from 'react-native-gesture-handler';
-
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-    textAlign: 'left',
-  },
-});
+import { FlatList } from 'react-native';
+import Container from '../../components/Container';
+import ColorBox from '../../components/ColorBox';
 
 const ColorPalette = ({
   route: {

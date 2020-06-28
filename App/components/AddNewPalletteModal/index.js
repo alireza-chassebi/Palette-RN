@@ -2,7 +2,6 @@ import React, { useState, useCallback } from 'react';
 import {
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
   Alert,
   FlatList,
@@ -11,45 +10,11 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import Container from './Container';
-import { COLORS } from '../data/data';
+import Container from '../Container';
+import { COLORS } from '../../data/data';
+import styles from './styles';
 //had to use @3.4.0 since v7 does not work in RN
 import uuid from 'uuid/v1';
-
-const styles = StyleSheet.create({
-  Input: {
-    borderColor: 'grey',
-    borderWidth: StyleSheet.hairlineWidth,
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 40,
-  },
-  Title: {
-    marginBottom: 5,
-  },
-  Button: {
-    backgroundColor: 'teal',
-    marginVertical: 10,
-    borderRadius: 5,
-  },
-  ButtonText: {
-    paddingVertical: 12,
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: '700',
-  },
-  ColorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  Seperator: {
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-});
-
-const initalValue = Array.from(Array(COLORS.length), () => false);
 
 const AddNewPaletteModal = ({ navigation: { navigate } }) => {
   const [name, setName] = useState('');
