@@ -5,14 +5,14 @@ import PalettePreview from '../components/PalettePreview';
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLOR_PALETTES } from '../data/data';
 
-const styles = {
+const styles = StyleSheet.create({
   ListHeader: {
     fontSize: 30,
     fontWeight: '700',
     color: 'teal',
     marginBottom: 20,
   },
-};
+});
 
 const useStorage = () => {
   const [response, setResponse] = useState(null);

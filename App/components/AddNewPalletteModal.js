@@ -8,6 +8,8 @@ import {
   FlatList,
   View,
   Switch,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import Container from './Container';
 import { COLORS } from '../data/data';
@@ -86,35 +88,39 @@ const AddNewPaletteModal = ({ navigation: { navigate } }) => {
   }, [name, selectedColors]);
   return (
     <Container>
-      <Text style={styles.Title}>Name of the palette</Text>
-      <TextInput
-        style={styles.Input}
-        value={name}
-        onChangeText={(text) => setName(text)}
-        placeholder="Palette name"
-      />
-      <FlatList
-        data={COLORS}
-        keyExtractor={(item, index) => String(index)}
-        renderItem={({ item, index }) => (
-          <View style={styles.ColorContainer}>
-            <Text>{item.colorName}</Text>
-            <Switch
-              value={
-                !!selectedColors.find(
-                  (color) => color.colorName === item.colorName
-                )
-              }
-              onValueChange={(newValue) => handleUpdate(item, newValue)}
-            />
-          </View>
-        )}
-        ItemSeparatorComponent={() => <View style={styles.Seperator} />}
-        showsVerticalScrollIndicator={false}
-      />
-      <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
-        <Text style={styles.ButtonText}>Submit</Text>
-      </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View>
+          <Text style={styles.Title}>Name of the palette</Text>
+          <TextInput
+            style={styles.Input}
+            value={name}
+            onChangeText={(text) => setName(text)}
+            placeholder="Palette name"
+          />
+          <FlatList
+            data={COLORS}
+            keyExtractor={(item, index) => String(index)}
+            renderItem={({ item, index }) => (
+              <View style={styles.ColorContainer}>
+                <Text>{item.colorName}</Text>
+                <Switch
+                  value={
+                    !!selectedColors.find(
+                      (color) => color.colorName === item.colorName
+                    )
+                  }
+                  onValueChange={(newValue) => handleUpdate(item, newValue)}
+                />
+              </View>
+            )}
+            ItemSeparatorComponent={() => <View style={styles.Seperator} />}
+            showsVerticalScrollIndicator={false}
+          />
+          <TouchableOpacity style={styles.Button} onPress={handleSubmit}>
+            <Text style={styles.ButtonText}>Submit</Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
     </Container>
   );
 };

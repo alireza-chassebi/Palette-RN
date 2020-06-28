@@ -5,7 +5,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './screens/Home';
 import ColorPalette from './screens/ColorPalette';
 import AddNewPaletteModal from './components/AddNewPalletteModal';
-import PalettePreview from './components/PalettePreview';
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();
