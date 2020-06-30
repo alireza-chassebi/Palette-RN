@@ -18,10 +18,6 @@ export default styles = StyleSheet.create({
     marginRight: 10,
   },
   IconContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    marginBottom: 30,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
